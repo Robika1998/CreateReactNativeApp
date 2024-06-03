@@ -51,6 +51,9 @@ export const FullPostScreens = ({ route, navigation }) => {
     }
   };
 
+  
+  
+
   const deletePost = async () => {
     try {
       await AsyncStorage.removeItem(`savedPosts:${id}`); 

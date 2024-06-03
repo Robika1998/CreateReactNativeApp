@@ -50,7 +50,7 @@ export const HomeScreens = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {savedCount > 0 && (
+      {/* {savedCount > 0 && (
   <TouchableOpacity
     style={styles.saveButton}
     onPress={() => navigation.navigate("SavedPosts")}
@@ -62,7 +62,7 @@ export const HomeScreens = ({ navigation }) => {
       </View>
     </View>
   </TouchableOpacity>
-)}
+)} */}
       <FlatList
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={fetchPosts} />

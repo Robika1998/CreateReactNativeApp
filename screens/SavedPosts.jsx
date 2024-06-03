@@ -1,41 +1,48 @@
-
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Post } from "../components/Post";
 
 export const SavedPostsScreen = ({ navigation }) => {
   const [savedPosts, setSavedPosts] = useState([]);
+  const [savedCount, setSavedCount] = useState(0);
+
+  const fetchSavedPosts = async () => {
+    try {
+      const posts = JSON.parse(await AsyncStorage.getItem("savedPosts")) || [];
+      setSavedPosts(posts);
+      setSavedCount(posts.length);
+    } catch (error) {
+      console.error("Failed to fetch saved posts", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchSavedPosts = async () => {
-      try {
-        const posts = JSON.parse(await AsyncStorage.getItem('savedPosts')) || [];
-        setSavedPosts(posts);
-      } catch (error) {
-        console.error("Failed to fetch saved posts", error);
-      }
-    };
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchSavedPosts();
+    });
 
-    fetchSavedPosts();
-  }, []);
+    return unsubscribe;
+  }, [navigation]);
 
   const removeSavedPost = async (postId) => {
     try {
-      const updatedPosts = savedPosts.filter(post => post.id !== postId);
-      await AsyncStorage.setItem('savedPosts', JSON.stringify(updatedPosts));
+      const updatedPosts = savedPosts.filter((post) => post.id !== postId);
+      await AsyncStorage.setItem("savedPosts", JSON.stringify(updatedPosts));
       setSavedPosts(updatedPosts);
-   
+      setSavedCount(updatedPosts.length);
     } catch (error) {
       console.error("Failed to delete the post", error);
       Alert.alert("Failed to delete the post");
     }
   };
-
-  useEffect(() => {
-  
-    navigation.setParams({ savedCount: savedPosts.length });
-  }, [savedPosts, navigation]);
 
   return (
     <View style={styles.container}>
@@ -48,7 +55,7 @@ export const SavedPostsScreen = ({ navigation }) => {
                 id: item.id,
                 title: item.title,
                 saved: true,
-                removeSavedPost: removeSavedPost
+                removeSavedPost: removeSavedPost,
               })
             }
           >

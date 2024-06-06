@@ -1,23 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import {
   Alert,
   View,
   StyleSheet,
   FlatList,
-  ActivityIndicator,
-  Text,
   RefreshControl,
   TouchableOpacity,
   StatusBar,
+  TextInput, 
 } from "react-native";
 import { Post } from "../components/Post";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SavedCountContext } from "./SavedCountContext";
 
 export const HomeScreens = ({ navigation }) => {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [savedCount, setSavedCount] = useState(0);
+  const { savedCount, setSavedCount } = useContext(SavedCountContext);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredItems, setFilteredItems] = useState([]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -29,6 +31,14 @@ export const HomeScreens = ({ navigation }) => {
     });
     return unsubscribe;
   }, [navigation]);
+
+  useEffect(() => {
+    setFilteredItems(
+      items.filter((item) =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
+  }, [searchQuery, items]);
 
   const fetchPosts = () => {
     setIsLoading(true);
@@ -50,24 +60,27 @@ export const HomeScreens = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* {savedCount > 0 && (
-  <TouchableOpacity
-    style={styles.saveButton}
-    onPress={() => navigation.navigate("SavedPosts")}
-  >
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <Text style={styles.buttonText}>Save</Text>
-      <View style={styles.badgeContainer}>
-        <Text style={styles.badgeText}>{savedCount}</Text>
+      <View
+        style={{
+          display: "flex",
+          width: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <TextInput
+          style={styles.searchInput}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholder="Search posts..."
+        />
       </View>
-    </View>
-  </TouchableOpacity>
-)} */}
+
       <FlatList
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={fetchPosts} />
         }
-        data={items}
+        data={filteredItems}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() =>
@@ -92,35 +105,12 @@ export const HomeScreens = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  saveButton: {
-    flexDirection: "row",
-
-    left: 345,
-    top: 5,
-    backgroundColor: "#007bff",
-    width: 50,
-    height: 30,
-    padding: 5,
-    borderRadius: 5,
-    // margin: 5,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    marginRight: 5,
-  },
-  badgeContainer: {
-    backgroundColor: "red",
-    borderRadius: 10,
-    width: 20,
-    height:20,
-    bottom:13
-  },
-  badgeText: {
-    color: "#fff",
-    fontWeight: "bold",
-   marginLeft: 5,
-   marginTop: 1
-    
+  searchInput: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    margin: 10,
+    padding: 10,
+    width: 300,
   },
 });

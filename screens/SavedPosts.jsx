@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   View,
-  Text,
-  StyleSheet,
   FlatList,
   TouchableOpacity,
   Alert,
+  StyleSheet,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Post } from "../components/Post";
+import { SavedCountContext } from "./SavedCountContext";
 
 export const SavedPostsScreen = ({ navigation }) => {
   const [savedPosts, setSavedPosts] = useState([]);
-  const [savedCount, setSavedCount] = useState(0);
+  const { savedCount, setSavedCount } = useContext(SavedCountContext);
 
   const fetchSavedPosts = async () => {
     try {

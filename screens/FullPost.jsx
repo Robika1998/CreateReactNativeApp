@@ -66,9 +66,6 @@ export const FullPostScreens = ({ route, navigation }) => {
     }
   };
 
-  // if (isLoading) {
-  //   return <Loading />;
-  // }
 
   return (
     <ScrollView style={styles.container}>

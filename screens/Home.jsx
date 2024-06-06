@@ -33,19 +33,22 @@ export const HomeScreens = ({ navigation }) => {
   }, [navigation]);
 
   useEffect(() => {
-    setFilteredItems(
-      items.filter((item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
+    // setFilteredItems(
+    //   items.filter((item) =>
+    //     item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    //   )
+    // );
   }, [searchQuery, items]);
 
   const fetchPosts = () => {
     setIsLoading(true);
     axios
-      .get("https://6657175e9f970b3b36c7e8f8.mockapi.io/apiurl")
+      // .get("https://6657175e9f970b3b36c7e8f8.mockapi.io/apiurl")
+      .get("http://192.168.1.130:3000/news")
+
       .then(({ data }) => {
         setItems(data);
+        console.log(data);
       })
       .catch((err) => {
         console.log(err);
@@ -80,25 +83,28 @@ export const HomeScreens = ({ navigation }) => {
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={fetchPosts} />
         }
-        data={filteredItems}
+        data={items.data}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("FullPost", {
                 id: item.id,
                 title: item.title,
+                createdAt: item.createdAt,
               })
             }
-          >
+          > 
+     
             <Post
               title={item.title}
               createdAt={item.createdAt}
-              imageUrl={item.imageUrl}
+              imageUrl={item.image}
             />
           </TouchableOpacity>
         )}
         keyExtractor={(item) => item.id}
       />
+
       <StatusBar style="auto" />
     </View>
   );

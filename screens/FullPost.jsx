@@ -24,7 +24,8 @@ export const FullPostScreens = ({ route, navigation }) => {
     const fetchPost = async () => {
       try {
         const { data } = await axios.get(
-          `https://6657175e9f970b3b36c7e8f8.mockapi.io/apiurl/${id}`
+          // `https://6657175e9f970b3b36c7e8f8.mockapi.io/apiurl/${id}`
+          `http://192.168.1.130:3000/news`
         );
         setData(data);
       } catch (error) {

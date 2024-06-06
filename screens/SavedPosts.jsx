@@ -62,7 +62,7 @@ export const SavedPostsScreen = ({ navigation }) => {
             <Post
               title={item.title}
               createdAt={item.createdAt}
-              imageUrl={item.imageUrl}
+              imageUrl={item.image}
             />
           </TouchableOpacity>
         )}

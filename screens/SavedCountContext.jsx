@@ -1,6 +1,5 @@
-// SavedCountContext.js
-import React, { createContext, useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const SavedCountContext = createContext();
 
@@ -9,7 +8,8 @@ export const SavedCountProvider = ({ children }) => {
 
   const fetchSavedCount = async () => {
     try {
-      const savedPosts = JSON.parse(await AsyncStorage.getItem('savedPosts')) || [];
+      const savedPosts =
+        JSON.parse(await AsyncStorage.getItem("savedPosts")) || [];
       setSavedCount(savedPosts.length);
     } catch (error) {
       console.error("Failed to fetch saved count", error);
